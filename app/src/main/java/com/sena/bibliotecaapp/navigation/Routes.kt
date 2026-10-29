@@ -26,4 +26,6 @@ object Routes {
     fun renovacionExitosa(nombre: String, fechaNueva: String) =
         "renovacion_exitosa/${Uri.encode(nombre)}/${Uri.encode(fechaNueva)}"
 
+    fun detalleReserva(nombre: String, fecha: String, codigo: String) =
+        "detalle_reserva/${Uri.encode(nombre)}/${Uri.encode(fecha)}/${Uri.encode(codigo)}"
 }
