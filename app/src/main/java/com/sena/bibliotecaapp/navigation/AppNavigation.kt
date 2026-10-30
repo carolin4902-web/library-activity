@@ -1,9 +1,11 @@
 package com.sena.bibliotecaapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.sena.bibliotecaapp.ui.screen.*
 
 @Composable
@@ -30,7 +32,7 @@ fun AppNavigation() {
             )
         }
 
-        // 3. Pantalla de Detalle de un Libro (Nombre corregido a DetalleLibrosScreen)
+        // 3. Pantalla de Detalle de un Libro
         composable(Routes.DETALLE_LIBRO) { backStackEntry ->
             val nombreLibro: String = backStackEntry.arguments?.getString("nombre") ?: "Libro"
             DetalleLibrosScreen(
@@ -42,7 +44,36 @@ fun AppNavigation() {
             )
         }
 
-        // 4. Pantalla de Mis Reservas
+        // 4. Pantalla de Confirmación de Reserva (Integrada con argumentos)
+        // 4. Pantalla de Confirmación de Reserva
+        composable(
+            route = Routes.CONFIRMACION,
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("fecha") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre: String = backStackEntry.arguments?.getString("nombre") ?: ""
+            val fecha: String = backStackEntry.arguments?.getString("fecha") ?: ""
+
+            // Ajustado a los nombres exactos que tu ConfirmacionScreen pide
+            ConfirmacionScreen(
+                nombre = nombre,
+                fecha = fecha,
+                onInicio = {
+                    navController.navigate(Routes.INICIO) {
+                        popUpTo(Routes.INICIO) { inclusive = true }
+                    }
+                },
+                onMisReservas = {
+                    navController.navigate(Routes.MIS_RESERVAS) {
+                        popUpTo(Routes.INICIO) { inclusive = false }
+                    }
+                }
+            )
+        }
+
+        // 5. Pantalla de Mis Reservas
         composable(Routes.MIS_RESERVAS) {
             MisReservasScreen(
                 onBack = { navController.popBackStack() },
@@ -55,7 +86,7 @@ fun AppNavigation() {
             )
         }
 
-        // 5. Pantalla de Detalle de una Reserva
+        // 6. Pantalla de Detalle de una Reserva
         composable(Routes.DETALLE_RESERVA) { backStackEntry ->
             val nombre: String = backStackEntry.arguments?.getString("nombre") ?: ""
             val fecha: String = backStackEntry.arguments?.getString("fecha") ?: ""
@@ -69,7 +100,7 @@ fun AppNavigation() {
             )
         }
 
-        // 6. Pantalla para Renovar Préstamo
+        // 7. Pantalla para Renovar Préstamo
         composable(Routes.RENOVAR) { backStackEntry ->
             val nombre: String = backStackEntry.arguments?.getString("nombre") ?: ""
             val fecha: String = backStackEntry.arguments?.getString("fecha") ?: ""
@@ -86,7 +117,7 @@ fun AppNavigation() {
             )
         }
 
-        // 7. Pantalla de Renovación Exitosa
+        // 8. Pantalla de Renovación Exitosa
         composable(Routes.RENOVACION_EXITOSA) { backStackEntry ->
             val nombre: String = backStackEntry.arguments?.getString("nombre") ?: ""
             val fechaNueva: String = backStackEntry.arguments?.getString("fechaNueva") ?: ""
